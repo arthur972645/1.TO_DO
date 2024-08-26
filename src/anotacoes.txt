@@ -1,0 +1,5 @@
+3 fases do projeto
+
+ - Main ou Master -> versão oficial em produção
+ - homologação -> clone oficial com novas func
+ - Develop -> codificamos

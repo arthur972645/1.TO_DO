@@ -23,6 +23,7 @@ app.use(express.json());
 conn
   .sync()
   .then(() => {
+    console.log("Olá, mundo")
     app.listen(PORT, () => {
       console.log(`Servidor on PORT: ${PORT}`);
     });
@@ -33,8 +34,11 @@ conn
 app.use("/tarefas", tarefaRouter);
 
 app.use((request, response) => {
-  response.status(404).json({ messaSge: "Rota não encontrada" });
+  response.status(404).json({ message: "Rota não encontrada" });
 });
 
 //* dentro do server não faz lógica, não recebe nota nem nada
 //* primeiro cria a rota, dps o controlador
+
+
+
