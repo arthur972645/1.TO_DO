@@ -2,6 +2,9 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 
+//* importar conexão do banco
+import conn from "./config/conn.js";
+
 //*IMPORTAÇÃO DAS ROTAS
 import tarefaRouter from "./routes/tarefaRouter.js";
 
@@ -13,14 +16,21 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+//*conexão com o banco
+conn
+  .sync()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Servidor on PORT: ${PORT}`);
+    });
+  })
+  .catch(() => console.error(error));
+
 //*utilizar rotas
 app.use("/tarefas", tarefaRouter);
 
 app.use((request, response) => {
   response.status(404).json({ messaSge: "Rota não encontrada" });
-});
-app.listen(PORT, () => {
-  console.log(`Servidor on PORT: ${PORT}`);
 });
 
 //* dentro do server não faz lógica, não recebe nota nem nada
