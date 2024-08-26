@@ -5,6 +5,9 @@ import cors from "cors";
 //* importar conexão do banco
 import conn from "./config/conn.js";
 
+//*Importar os modelos
+import Tarefa from "./models/tarefaModel.js";
+
 //*IMPORTAÇÃO DAS ROTAS
 import tarefaRouter from "./routes/tarefaRouter.js";
 
