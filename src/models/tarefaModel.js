@@ -28,4 +28,4 @@ const Tarefa = conn.define(
   }
 );
 
-export default Tarefa
+export default Tarefa;
