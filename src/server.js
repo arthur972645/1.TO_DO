@@ -24,7 +24,7 @@ conn
       console.log(`Servidor on PORT: ${PORT}`);
     });
   })
-  .catch(() => console.error(error));
+  .catch((error) => console.error(error));
 
 //*utilizar rotas
 app.use("/tarefas", tarefaRouter);
