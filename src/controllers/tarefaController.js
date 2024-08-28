@@ -1,13 +1,5 @@
     import Tarefa from "../models/tarefaModel.js";
 
-    // export const getAll = async (request, response) => {
-    // try {
-    //     const tarefas = await Tarefa.findAll();
-    //     response.status(200).json(tarefas);
-    // } catch (error) {
-    //     response.status(500).json({ message: "Erro ao listar tarefas" });
-    // }
-    // };
 
     export const create = async (request, response) => {
     const { tarefa, descricao } = request.body;
