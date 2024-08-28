@@ -53,4 +53,17 @@ export const create = async (request, response) => {
     console.error(error);
     response.status(500).json({ message: "erro ao cadastrar tarefa" });
   }
-}
+};
+
+export const getTarefa = async (request, response) => {
+  const { id } = request.params;
+  try {
+    const tarefa = await Tarefa.findByPk(id); OBJETO
+    // const tarefa = await Tarefa.findOne({ where: { id } });
+
+    response.status(200).json(tarefa);
+  } catch (error) {
+    console.log(error);
+    response.status(500).json({ message: "erro ao buscar tarefa" });
+  }
+};
