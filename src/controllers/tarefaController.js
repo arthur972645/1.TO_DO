@@ -99,7 +99,7 @@ export const updateTarefa = async (request, response) => {
       where: { id },
     });
     if (linhasAfetadas <= 0) {
-      response.status(404).json({ message: "tarefa nao encontrada" });
+      response.status(404).json({ message: "tarefa não encontrada" });
       return;
     }
 
