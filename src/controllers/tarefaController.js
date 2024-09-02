@@ -1,4 +1,3 @@
-import { response } from "express";
 import Tarefa from "../models/tarefaModel.js";
 
 //*tarefas?page=1&limit=10
@@ -29,6 +28,7 @@ export const getAll = async (request, response) => {
   }
 };
 
+//*precisa de validação
 export const create = async (request, response) => {
   const { tarefa, descricao } = request.body;
   const status = "pendente";
@@ -55,7 +55,7 @@ export const create = async (request, response) => {
     response.status(500).json({ message: "erro ao cadastrar tarefa" });
   }
 };
-
+//*precisa de validação
 export const getTarefa = async (request, response) => {
   const { id } = request.params;
   try {
@@ -71,7 +71,7 @@ export const getTarefa = async (request, response) => {
     response.status(500).json({ message: "erro ao buscar tarefa" });
   }
 };
-
+//*precisa de validação
 export const updateTarefa = async (request, response) => {
   const { id } = request.params;
   const { tarefa, descricao, status } = request.body;
@@ -108,7 +108,7 @@ export const updateTarefa = async (request, response) => {
     response.status(200).json({ message: "erro ao atualizar tarefa" });
   }
 };
-
+//*precisa de validação
 export const updateStatusTarefa = async (request, response) => {
   const { id } = request.params;
   try {
@@ -130,7 +130,7 @@ export const updateStatusTarefa = async (request, response) => {
     response.status(500).json({ message: "erro ao atualizar tarefa" });
   }
 };
-
+//*precisa de validação
 export const getTarefaPorSituacao = async (request, response) => {
   const { situacao } = request.params;
   if (situacao !== "pendente" && situacao !== "concluida") {
