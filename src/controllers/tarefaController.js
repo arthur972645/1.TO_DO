@@ -12,6 +12,11 @@ const createSchema = z.object({
     .min(5, { message: "a descrição deve ter pelo menos 5 caracteres" }),
 });
 
+const getSchema = z.object({
+  id: z.string().uuid({message: "Id da tarefa. está inválido."})
+})
+
+
 //*tarefas?page=1&limit=10
 export const getAll = async (request, response) => {
   const page = parseInt(request.query.page) || 1;
@@ -81,6 +86,15 @@ export const create = async (request, response) => {
 //*precisa de validação
 export const getTarefa = async (request, response) => {
   const { id } = request.params;
+
+  
+const paramValidator = getSchema.safeParse(req.params)
+if(!paramValidator.success){
+  res.status(400).json({ message: "Número de identificação está inválida.",
+  detalhes: formatZodError(paramValidator.error)
+  })
+  return
+}
   try {
     // const tarefa = await Tarefa.findByPk(id);
     // OBJETO;
