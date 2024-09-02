@@ -108,3 +108,25 @@ export const updateTarefa = async (request, response) => {
     response.status(200).json({ message: "erro ao atualizar tarefa" });
   }
 };
+
+export const updateStatusTarefa = async (request, response) => {
+  const { id } = request.params;
+  try {
+    const tarefa = await Tarefa.findOne({ raw: true, where: { id } });
+    if (tarefa === null) {
+      response.status(404).json({ message: "tarefa não encontrada" });
+      return;
+    }
+    if (tarefa.status === "pendente") {
+      await Tarefa.update({ status: "concluida" }, { where: { id: id } });
+    } else if (tarefa.status === "concluida") {
+      await Tarefa.update({ status: "pendente" }, { where: { id: id } });
+      //*
+    }
+    const tarefaAtualizada = await Tarefa.findOne({ raw: true, where: { id } });
+    response.status(200).json(tarefaAtualizada);
+  } catch (error) {
+    console.error(error);
+    response.status(500).json({ message: "erro ao atualizar tarefa" });
+  }
+};
