@@ -1,4 +1,16 @@
 import Tarefa from "../models/tarefaModel.js";
+import { z } from "zod";
+import formatZodError from "../helpers/formatZodError.js";
+//*validações com ZOD
+const createSchema = z.object({
+  tarefa: z
+    .string()
+    .min(3, { message: "a tarefa deve ter pelo menos 3 caracteres" })
+    .transform((txt) => txt.toLowerCase()),
+  descricao: z
+    .string()
+    .min(5, { message: "a descrição deve ter pelo menos 5 caracteres" }),
+});
 
 //*tarefas?page=1&limit=10
 export const getAll = async (request, response) => {
@@ -30,6 +42,17 @@ export const getAll = async (request, response) => {
 
 //*precisa de validação
 export const create = async (request, response) => {
+  //*IMPLEMENTAR A VALIDAÇÃO
+  const bodyValidation = createSchema.safeParse(request.body);
+  // console.log(bodyValidation);
+  if (!bodyValidation.success) {
+    response.status(400).json({
+      message: "Os dados recebidos do corpo da aplicação são inválidos",
+      detalhes: bodyValidation.error,
+    });
+    return;
+  }
+
   const { tarefa, descricao } = request.body;
   const status = "pendente";
 
@@ -144,8 +167,8 @@ export const getTarefaPorSituacao = async (request, response) => {
       where: { status: situacao },
       raw: true,
     });
-    response.status(200).json(tarefas)
+    response.status(200).json(tarefas);
   } catch (error) {
-    response.status(500).json({err: "erro ao buscar tarefas"})
+    response.status(500).json({ err: "erro ao buscar tarefas" });
   }
 };
