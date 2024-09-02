@@ -130,3 +130,22 @@ export const updateStatusTarefa = async (request, response) => {
     response.status(500).json({ message: "erro ao atualizar tarefa" });
   }
 };
+
+export const getTarefaPorSituacao = async (request, response) => {
+  const { situacao } = request.params;
+  if (situacao !== "pendente" && situacao !== "concluida") {
+    response
+      .status(400)
+      .json({ message: "Situação inválida. Use 'pendente' ou 'concluida'" });
+    return;
+  }
+  try {
+    const tarefas = await Tarefa.findAll({
+      where: { status: situacao },
+      raw: true,
+    });
+    response.status(200).json(tarefas)
+  } catch (error) {
+    response.status(500).json({err: "erro ao buscar tarefas"})
+  }
+};
