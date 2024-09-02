@@ -103,7 +103,7 @@ export const updateTarefa = async (request, response) => {
       return;
     }
 
-    response.status(200).json({ message: "tarefa atualizada" });
+    response.status(200).json({ message: "tarefa atualiza" });
   } catch (error) {
     response.status(200).json({ message: "erro ao atualizar tarefa" });
   }
