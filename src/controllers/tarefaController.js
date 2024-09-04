@@ -16,6 +16,22 @@ const getSchema = z.object({
   id: z.string().uuid({message: "Id da tarefa. está inválido."})
 })
 
+const getTarefaPorSituacaoSchema = z.object({
+  situacao: z.enum(["pendente", "concluida"])
+})
+
+const updateTarefaSchema = z.object({
+  tarefa: z
+  .string()
+  .min(3,{message: "A tarefa deve ter pelo menos 3 caracteres"})
+  .transform((txt) =>txt.toLowerCase()) ,
+  descricap: z
+  .string()
+  .min(5,{message: "A tarefa deve ter pelo menos 5 caracteres"}),
+  situacao: z
+  .enum(["pendente", "concluida"])
+})
+
 
 //*tarefas?page=1&limit=10
 export const getAll = async (request, response) => {
@@ -45,7 +61,7 @@ export const getAll = async (request, response) => {
   }
 };
 
-//*precisa de validação
+//*precisa de validação - ok
 export const create = async (request, response) => {
   //*IMPLEMENTAR A VALIDAÇÃO
   const bodyValidation = createSchema.safeParse(request.body);
@@ -83,7 +99,7 @@ export const create = async (request, response) => {
     response.status(500).json({ message: "erro ao cadastrar tarefa" });
   }
 };
-//*precisa de validação
+//*precisa de validação - ok
 export const getTarefa = async (request, response) => {
   const { id } = request.params;
 
@@ -108,24 +124,29 @@ if(!paramValidator.success){
     response.status(500).json({ message: "erro ao buscar tarefa" });
   }
 };
-//*precisa de validação
+//*precisa de validação - ok
 export const updateTarefa = async (request, response) => {
+  
+  //Validações
+  const paramValidator = getSchema.safeParse(req.params)
+    if(!paramValidator.success){
+      res.status(400).json({ message: "Número de identificação está inválida.",
+      detalhes: formatZodError(paramValidator.error)
+      })
+      return
+    }
+
+    const updateValidator = updateTarefaSchema.safeParse(request.body)
+    if(!updateValidator.success){
+      response.status(400).json({
+        message: "Dados para atualização estão icorretos",
+        details: formatZodError(updateValidator.error)
+      })
+      return
+    }
   const { id } = request.params;
   const { tarefa, descricao, status } = request.body;
 
-  //*validações
-  if (!tarefa) {
-    response.status(400).json({ message: "a tarefa é obrigatória" });
-    return;
-  }
-  if (!descricao) {
-    response.status(400).json({ message: "a descricao é obrigatória" });
-    return;
-  }
-  if (!status) {
-    response.status(400).json({ message: "o status é obrigatória" });
-    return;
-  }
   const tarefaAtualizada = {
     tarefa,
     descricao,
@@ -147,6 +168,18 @@ export const updateTarefa = async (request, response) => {
 };
 //*precisa de validação
 export const updateStatusTarefa = async (request, response) => {
+  
+  const paramValidator = getSchema.safeParse(request.params)
+    if(!paramValidator.success){
+      res.status(400).json({ message: "Número de identificação está inválida.",
+      detalhes: formatZodError(paramValidator.error)
+      })
+      return
+    }
+
+
+
+
   const { id } = request.params;
   try {
     const tarefa = await Tarefa.findOne({ raw: true, where: { id } });
@@ -169,6 +202,17 @@ export const updateStatusTarefa = async (request, response) => {
 };
 //*precisa de validação
 export const getTarefaPorSituacao = async (request, response) => {
+ 
+ const situacaoValidator = getTarefaPorSituacaoSchema.safeParse(request.paramValidator)
+ if(!situacaoValidator){
+  response.status(400).json({
+    message: "Situação incalida",
+    details: formatZodError(situacaoValidator.error)
+  })
+  return
+ }
+ 
+ 
   const { situacao } = request.params;
   if (situacao !== "pendente" && situacao !== "concluida") {
     response
